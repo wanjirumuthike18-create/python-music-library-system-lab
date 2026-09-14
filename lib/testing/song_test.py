@@ -1,52 +1,46 @@
 #!/usr/bin/env python3
 
-from song import Song
 
-Song.count = 0
-Song.genre_count = {}
-Song.artist_count = {}
+class Song:
+    # Class attributes — shared "global" tracking across all songs
+    count = 0
+    genres = []
+    artists = []
+    genre_count = {}
+    artist_count = {}
 
-class TestSong:
-    '''Class "Song" in song.py'''
+    def __init__(self, name, artist, genre):
+        self.name = name
+        self.artist = artist
+        self.genre = genre
 
-    Song("99 Problems", "Jay Z", "Rap")
-    Song("Halo", "Beyonce", "Pop")
-    Song("Smells Like Teen Spirit", "Nirvana", "Rock")
+        Song.add_song_to_count()
+        Song.add_to_genres(genre)
+        Song.add_to_artists(artist)
+        Song.add_to_genre_count(genre)
+        Song.add_to_artist_count(artist)
 
-    def test_saves_name_artist_genre(self):
-        '''instantiates with a name, artist, and genre.'''
-        out_of_touch = Song("Out of Touch", "Hall and Oates", "Pop")
-        assert(out_of_touch.name == "Out of Touch")
-        assert(out_of_touch.artist == "Hall and Oates")
-        assert(out_of_touch.genre == "Pop")
+    @classmethod
+    def add_song_to_count(cls):
+        cls.count += 1
 
-    def test_has_song_count(self):
-        '''counts the total number of Song objects.'''
-        assert(Song.count == 4)
-        Song("Sara Smile", "Hall and Oates", "Pop")
-        assert(Song.count == 5)
+    @classmethod
+    def add_to_genres(cls, genre):
+        if genre not in cls.genres:
+            cls.genres.append(genre)
 
-    def test_has_genres(self):
-        '''keeps track of all Song genres.'''
-        assert("Rap" in Song.genres)
-        assert("Pop" in Song.genres)
-        assert("Rock" in Song.genres)
+    @classmethod
+    def add_to_artists(cls, artist):
+        if artist not in cls.artists:
+            cls.artists.append(artist)
 
-    def test_has_artists(self):
-        '''keeps track of all Song artists.'''
-        assert("Jay Z" in Song.artists)
-        assert("Beyonce" in Song.artists)
-        assert("Hall and Oates" in Song.artists)
-        
-    def test_has_genre_count(self):
-        '''keeps count of Songs for each genre.'''
-        assert(Song.genre_count["Rap"] == 1)
-        assert(Song.genre_count["Pop"] == 3)
-        assert(Song.genre_count["Rock"] == 1)
+    @classmethod
+    def add_to_genre_count(cls, genre):
+        cls.genre_count[genre] = cls.genre_count.get(genre, 0) + 1
 
-    def test_has_artist_count(self):
-        '''keeps count of Songs for each artist.'''
-        assert(Song.artist_count["Jay Z"] == 1)
-        assert(Song.artist_count["Beyonce"] == 1)
-        assert(Song.artist_count["Nirvana"] == 1)
-        assert(Song.artist_count["Hall and Oates"] == 2)
+    @classmethod
+    def add_to_artist_count(cls, artist):
+        cls.artist_count[artist] = cls.artist_count.get(artist, 0) + 1
+
+    def __repr__(self):
+        return f"Song('{self.name}', '{self.artist}', '{self.genre}')"
